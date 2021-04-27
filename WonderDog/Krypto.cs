@@ -120,7 +120,7 @@ namespace WonderDog
             int read = cs.Read(magic, 0, magic.Length);
             if (read != magic.Length)
                 throw new Exception("Error descrypting magic string");
-            if (IsMagicString(magic))
+            if (!IsMagicString(magic))
                 throw new Exception("Invalid password, or file not encrypted with WonderDog");
 
             using var sr = new StreamReader(cs);
@@ -145,7 +145,7 @@ namespace WonderDog
             int read = cs.Read(magic, 0, magic.Length);
             if (read != magic.Length)
                 throw new Exception("Error descrypting magic string");
-            if (IsMagicString(magic))
+            if (!IsMagicString(magic))
                 throw new Exception("Invalid password, or file not encrypted with WonderDog");
            
             var ret = new byte[data.Length - magic.Length];
@@ -173,7 +173,8 @@ namespace WonderDog
                 int read = await cs.ReadAsync(magic, 0, magic.Length).ConfigureAwait(false);
                 if (read != magic.Length)
                     throw new Exception("Error descrypting magic string");
-                if (IsMagicString(magic))
+                
+                if (!IsMagicString(magic))
                     throw new Exception("Invalid password, or file not encrypted with WonderDog");
 
                 using var dst = new FileStream(tmpFile, FileMode.Create, FileAccess.Write, FileShare.None, BUFFER_SIZE, true);
