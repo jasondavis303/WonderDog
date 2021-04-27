@@ -32,9 +32,17 @@ namespace WonderDog
 
         private async void btnEncrypt_Click(object sender, EventArgs e)
         {
+            using var f = new frmConfirmPassword(tbPassword.Text);
+            if (f.ShowDialog() != DialogResult.OK)
+                return;
+
+            UseWaitCursor = true;
+            tlpMain.Enabled = false;
+
             try
             {
                 await Krypto.EncryptFileAsync(tbFilename.Text, tbPassword.Text);
+                MessageBox.Show("File Encrypted", "Success", MessageBoxButtons.OK, MessageBoxIcon.Information);
             }
             catch (AggregateException ex)
             {
@@ -44,13 +52,20 @@ namespace WonderDog
             {
                 ShowErrors(new Exception[] { ex });
             }
+
+            UseWaitCursor = false;
+            tlpMain.Enabled = true;
         }
 
         private async void btnDecrypt_Click(object sender, EventArgs e)
         {
+            UseWaitCursor = true;
+            tlpMain.Enabled = false;
+
             try
             {
                 await Krypto.DecryptFileAsync(tbFilename.Text, tbPassword.Text);
+                MessageBox.Show("File Decrypted", "Success", MessageBoxButtons.OK, MessageBoxIcon.Information);
             }
             catch (AggregateException ex)
             {
@@ -60,6 +75,9 @@ namespace WonderDog
             {
                 ShowErrors(new Exception[] { ex });
             }
+
+            UseWaitCursor = false;
+            tlpMain.Enabled = true;
         }
 
         private void EnableButtons()
