@@ -1,0 +1,26 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>WinExe</OutputType>
+    <TargetFramework>net5.0-windows</TargetFramework>
+    <UseWindowsForms>true</UseWindowsForms>
+    <Version>1.0.0.1</Version>
+    <Authors>Jason Davis</Authors>
+    <Company>jasondavis303</Company>
+    <Description>Utility to encrypt/decrypt files, with a bit of magic so this app is needed to decrypt</Description>
+    <Copyright>jasondavis303</Copyright>
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
+    <PackageProjectUrl>https://github.com/jasondavis303/WonderDog</PackageProjectUrl>
+    <RepositoryUrl>https://github.com/jasondavis303/WonderDog.git</RepositoryUrl>
+    <RepositoryType>git</RepositoryType>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <None Include="..\.editorconfig" Link=".editorconfig" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="suag" Version="21.4.26.1051" />
+  </ItemGroup>
+
+</Project>
