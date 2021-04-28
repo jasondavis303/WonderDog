@@ -5,7 +5,7 @@ namespace WonderDog
 {
     public partial class frmConfirmPassword : Form
     {
-        private string _password;
+        private readonly string _password;
 
         public frmConfirmPassword(string password)
         {
