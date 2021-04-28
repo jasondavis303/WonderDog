@@ -182,6 +182,7 @@ namespace WonderDog
             this.MaximizeBox = false;
             this.Name = "frmMain";
             this.Text = "WonderDog";
+            this.Load += new System.EventHandler(this.frmMain_Load);
             this.tlpMain.ResumeLayout(false);
             this.tlpMain.PerformLayout();
             this.tlpButtons.ResumeLayout(false);

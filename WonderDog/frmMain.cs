@@ -1,15 +1,23 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Security.Cryptography;
 using System.Windows.Forms;
 
 namespace WonderDog
 {
     public partial class frmMain : Form
     {
+        private const string MAGIC_STRING = "Krypto the Wonder Dog";
+
         public frmMain()
         {
             InitializeComponent();
+        }
+
+        private void frmMain_Load(object sender, EventArgs e)
+        {
+            Text += $" v{SelfUpdatingApp.Installer.GetInstalledVersion(Program.APP_ID)}";
         }
 
         private void tbFilename_TextChanged(object sender, EventArgs e)
@@ -39,9 +47,12 @@ namespace WonderDog
             UseWaitCursor = true;
             tlpMain.Enabled = false;
 
+            string tmpFile = tbFilename.Text + ".tmp";
+
             try
             {
-                await Krypto.EncryptFileAsync(tbFilename.Text, tbPassword.Text);
+                await new Krypto().EncryptFileAsync(tbFilename.Text, tmpFile, tbPassword.Text, MAGIC_STRING);
+                File.Move(tmpFile, tbFilename.Text, true);
                 MessageBox.Show("File Encrypted", "Success", MessageBoxButtons.OK, MessageBoxIcon.Information);
             }
             catch (AggregateException ex)
@@ -51,6 +62,12 @@ namespace WonderDog
             catch (Exception ex)
             {
                 ShowErrors(new Exception[] { ex });
+            }
+            finally
+            {
+                if (File.Exists(tmpFile))
+                    try { File.Delete(tmpFile); }
+                    catch { }
             }
 
             UseWaitCursor = false;
@@ -62,9 +79,12 @@ namespace WonderDog
             UseWaitCursor = true;
             tlpMain.Enabled = false;
 
+            string tmpFile = tbFilename.Text + ".tmp";
+
             try
             {
-                await Krypto.DecryptFileAsync(tbFilename.Text, tbPassword.Text);
+                await new Krypto().DecryptFileAsync(tbFilename.Text, tmpFile, tbPassword.Text, MAGIC_STRING);
+                File.Move(tmpFile, tbFilename.Text, true);
                 MessageBox.Show("File Decrypted", "Success", MessageBoxButtons.OK, MessageBoxIcon.Information);
             }
             catch (AggregateException ex)
@@ -74,6 +94,12 @@ namespace WonderDog
             catch (Exception ex)
             {
                 ShowErrors(new Exception[] { ex });
+            }
+            finally
+            {
+                if (File.Exists(tmpFile))
+                    try { File.Delete(tmpFile); }
+                    catch { }
             }
 
             UseWaitCursor = false;
@@ -103,7 +129,7 @@ namespace WonderDog
 
         private static void ShowErrors(IEnumerable<Exception> exes)
         {
-            foreach(var ex in exes)
+            foreach (var ex in exes)
                 MessageBox.Show(ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
         }
     }
