@@ -1,4 +1,5 @@
-﻿using Krypto.WonderDog;
+﻿using AMRE;
+using Krypto.WonderDog;
 using Krypto.WonderDog.Symmetric;
 using System;
 using System.Collections.Generic;
@@ -54,7 +55,7 @@ namespace WonderDog
 
             try
             {
-                var mres = new ManualResetEventSlim();
+                var mres = new AsyncManualResetEvent();
                 var key = new Key(tbPassword.Text, new byte[8]);
                 var alg = SymmetricFactory.CreateAES();
                 IProgress<KryptoProgress> prog = new Progress<KryptoProgress>(p =>
@@ -65,7 +66,7 @@ namespace WonderDog
                 });
                 await alg.EncryptFileAsync(key, tbFilename.Text, tmpFile, prog);                
                 File.Move(tmpFile, tbFilename.Text, true);
-                await Task.Run(() => mres.Wait());
+                await mres.WaitAsync();
                 MessageBox.Show("File Encrypted", "Success", MessageBoxButtons.OK, MessageBoxIcon.Information);
             }
             catch (AggregateException ex)
@@ -103,7 +104,7 @@ namespace WonderDog
 
             try
             {
-                var mres = new ManualResetEventSlim();
+                var mres = new AsyncManualResetEvent();
                 var key = new Key(tbPassword.Text, new byte[8]);
                 var alg = SymmetricFactory.CreateAES();
                 IProgress<KryptoProgress> prog = new Progress<KryptoProgress>(p =>
@@ -114,7 +115,7 @@ namespace WonderDog
                 });
                 await alg.DecryptFileAsync(key, tbFilename.Text, tmpFile, prog);
                 File.Move(tmpFile, tbFilename.Text, true);
-                await Task.Run(() => mres.Wait());
+                await mres.WaitAsync();
                 MessageBox.Show("File Decrypted", "Success", MessageBoxButtons.OK, MessageBoxIcon.Information);
             }
             catch (AggregateException ex)
