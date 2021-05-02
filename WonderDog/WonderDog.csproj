@@ -21,8 +21,8 @@
 
   <ItemGroup>
     <PackageReference Include="AMRE" Version="21.5.2.1178" />
-    <PackageReference Include="Krypto.WonderDog" Version="21.5.2.762" />
-    <PackageReference Include="suag" Version="21.4.26.1051" />
+    <PackageReference Include="Krypto.WonderDog" Version="21.5.2.1100" />
+    <PackageReference Include="suag" Version="21.5.2.1324" />
   </ItemGroup>
 
 </Project>
