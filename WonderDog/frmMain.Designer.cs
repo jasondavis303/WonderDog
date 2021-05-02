@@ -39,6 +39,7 @@ namespace WonderDog
             this.btnEncrypt = new System.Windows.Forms.Button();
             this.btnDecrypt = new System.Windows.Forms.Button();
             this.ofdFilename = new System.Windows.Forms.OpenFileDialog();
+            this.pbProgress = new System.Windows.Forms.ProgressBar();
             this.tlpMain.SuspendLayout();
             this.tlpButtons.SuspendLayout();
             this.SuspendLayout();
@@ -69,7 +70,7 @@ namespace WonderDog
             this.tlpMain.RowStyles.Add(new System.Windows.Forms.RowStyle());
             this.tlpMain.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 20F));
             this.tlpMain.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 20F));
-            this.tlpMain.Size = new System.Drawing.Size(484, 169);
+            this.tlpMain.Size = new System.Drawing.Size(484, 168);
             this.tlpMain.TabIndex = 0;
             // 
             // lblFilename
@@ -172,11 +173,20 @@ namespace WonderDog
             // 
             this.ofdFilename.Filter = "All Files|*";
             // 
+            // pbProgress
+            // 
+            this.pbProgress.Location = new System.Drawing.Point(20, 72);
+            this.pbProgress.Name = "pbProgress";
+            this.pbProgress.Size = new System.Drawing.Size(444, 23);
+            this.pbProgress.TabIndex = 1;
+            this.pbProgress.Visible = false;
+            // 
             // frmMain
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(484, 169);
+            this.ClientSize = new System.Drawing.Size(484, 168);
+            this.Controls.Add(this.pbProgress);
             this.Controls.Add(this.tlpMain);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
             this.MaximizeBox = false;
@@ -202,6 +212,7 @@ namespace WonderDog
         private System.Windows.Forms.Button btnEncrypt;
         private System.Windows.Forms.Button btnDecrypt;
         private System.Windows.Forms.OpenFileDialog ofdFilename;
+        private System.Windows.Forms.ProgressBar pbProgress;
     }
 }
 

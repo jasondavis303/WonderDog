@@ -1,15 +1,16 @@
-﻿using System;
+﻿using Krypto.WonderDog;
+using Krypto.WonderDog.Symmetric;
+using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Security.Cryptography;
+using System.Threading;
+using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace WonderDog
 {
     public partial class frmMain : Form
     {
-        private const string MAGIC_STRING = "Krypto the Wonder Dog";
-
         public frmMain()
         {
             InitializeComponent();
@@ -46,13 +47,25 @@ namespace WonderDog
 
             UseWaitCursor = true;
             tlpMain.Enabled = false;
+            pbProgress.Value = 0;
+            pbProgress.Visible = true;
 
             string tmpFile = tbFilename.Text + ".tmp";
 
             try
             {
-                await new Krypto().EncryptFileAsync(tbFilename.Text, tmpFile, tbPassword.Text, MAGIC_STRING);
+                var mres = new ManualResetEventSlim();
+                var key = new Key(tbPassword.Text, new byte[8]);
+                var alg = SymmetricFactory.CreateAES();
+                IProgress<KryptoProgress> prog = new Progress<KryptoProgress>(p =>
+                {
+                    pbProgress.Value = (int)Math.Floor(p.Percent * 100);
+                    if (p.Done)
+                        mres.Set();
+                });
+                await alg.EncryptFileAsync(key, tbFilename.Text, tmpFile, prog);                
                 File.Move(tmpFile, tbFilename.Text, true);
+                await Task.Run(() => mres.Wait());
                 MessageBox.Show("File Encrypted", "Success", MessageBoxButtons.OK, MessageBoxIcon.Information);
             }
             catch (AggregateException ex)
@@ -70,21 +83,38 @@ namespace WonderDog
                     catch { }
             }
 
+            pbProgress.Visible = false;
             UseWaitCursor = false;
             tlpMain.Enabled = true;
         }
 
         private async void btnDecrypt_Click(object sender, EventArgs e)
         {
+            using var f = new frmConfirmPassword(tbPassword.Text);
+            if (f.ShowDialog() != DialogResult.OK)
+                return;
+
             UseWaitCursor = true;
             tlpMain.Enabled = false;
+            pbProgress.Value = 0;
+            pbProgress.Visible = true;
 
             string tmpFile = tbFilename.Text + ".tmp";
 
             try
             {
-                await new Krypto().DecryptFileAsync(tbFilename.Text, tmpFile, tbPassword.Text, MAGIC_STRING);
+                var mres = new ManualResetEventSlim();
+                var key = new Key(tbPassword.Text, new byte[8]);
+                var alg = SymmetricFactory.CreateAES();
+                IProgress<KryptoProgress> prog = new Progress<KryptoProgress>(p =>
+                {
+                    pbProgress.Value = (int)Math.Floor(p.Percent * 100);
+                    if (p.Done)
+                        mres.Set();
+                });
+                await alg.DecryptFileAsync(key, tbFilename.Text, tmpFile, prog);
                 File.Move(tmpFile, tbFilename.Text, true);
+                await Task.Run(() => mres.Wait());
                 MessageBox.Show("File Decrypted", "Success", MessageBoxButtons.OK, MessageBoxIcon.Information);
             }
             catch (AggregateException ex)
@@ -102,6 +132,7 @@ namespace WonderDog
                     catch { }
             }
 
+            pbProgress.Visible = false;
             UseWaitCursor = false;
             tlpMain.Enabled = true;
         }
