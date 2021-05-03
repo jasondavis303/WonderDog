@@ -1,11 +1,9 @@
-﻿using AMRE;
-using Krypto.WonderDog;
+﻿using Krypto.WonderDog;
 using Krypto.WonderDog.Symmetric;
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Threading;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace WonderDog
@@ -55,18 +53,18 @@ namespace WonderDog
 
             try
             {
-                var mres = new AsyncManualResetEvent();
+                using var mre = new ManualResetEvent(false);
                 var key = new Key(tbPassword.Text, new byte[8]);
                 var alg = SymmetricFactory.CreateAES();
                 IProgress<KryptoProgress> prog = new Progress<KryptoProgress>(p =>
                 {
                     pbProgress.Value = (int)Math.Floor(p.Percent * 100);
                     if (p.Done)
-                        mres.Set();
+                        mre.Set();
                 });
                 await alg.EncryptFileAsync(key, tbFilename.Text, tmpFile, prog);                
                 File.Move(tmpFile, tbFilename.Text, true);
-                await mres.WaitAsync();
+                await mre.WaitOneAsync();
                 MessageBox.Show("File Encrypted", "Success", MessageBoxButtons.OK, MessageBoxIcon.Information);
             }
             catch (AggregateException ex)
@@ -104,18 +102,18 @@ namespace WonderDog
 
             try
             {
-                var mres = new AsyncManualResetEvent();
+                using var mre = new ManualResetEvent(false);
                 var key = new Key(tbPassword.Text, new byte[8]);
                 var alg = SymmetricFactory.CreateAES();
                 IProgress<KryptoProgress> prog = new Progress<KryptoProgress>(p =>
                 {
                     pbProgress.Value = (int)Math.Floor(p.Percent * 100);
                     if (p.Done)
-                        mres.Set();
+                        mre.Set();
                 });
                 await alg.DecryptFileAsync(key, tbFilename.Text, tmpFile, prog);
                 File.Move(tmpFile, tbFilename.Text, true);
-                await mres.WaitAsync();
+                await mre.WaitOneAsync();
                 MessageBox.Show("File Decrypted", "Success", MessageBoxButtons.OK, MessageBoxIcon.Information);
             }
             catch (AggregateException ex)
