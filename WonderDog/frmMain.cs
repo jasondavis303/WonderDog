@@ -17,10 +17,10 @@ namespace WonderDog
 
         private void frmMain_Load(object sender, EventArgs e)
         {
-            Text += $" v{SelfUpdatingApp.Installer.GetInstalledVersion(Program.APP_ID)}";
+            Text += $" v{Application.ProductVersion}";
         }
 
-        private void tbFilename_TextChanged(object sender, EventArgs e)
+        private void TextBox_TextChanged(object sender, EventArgs e)
         {
             EnableButtons();
         }
@@ -33,22 +33,12 @@ namespace WonderDog
             EnableButtons();
         }
 
-        private void tbPassword_TextChanged(object sender, EventArgs e)
-        {
-            EnableButtons();
-        }
-
         private async void btnEncrypt_Click(object sender, EventArgs e)
         {
-            using var f = new frmConfirmPassword(tbPassword.Text);
-            if (f.ShowDialog() != DialogResult.OK)
-                return;
-
             UseWaitCursor = true;
             tlpMain.Enabled = false;
             pbProgress.Value = 0;
-            pbProgress.Visible = true;
-
+            
             string tmpFile = tbFilename.Text + ".tmp";
 
             try
@@ -82,22 +72,16 @@ namespace WonderDog
                     catch { }
             }
 
-            pbProgress.Visible = false;
             UseWaitCursor = false;
             tlpMain.Enabled = true;
         }
 
         private async void btnDecrypt_Click(object sender, EventArgs e)
-        {
-            using var f = new frmConfirmPassword(tbPassword.Text);
-            if (f.ShowDialog() != DialogResult.OK)
-                return;
-
+        {           
             UseWaitCursor = true;
             tlpMain.Enabled = false;
             pbProgress.Value = 0;
-            pbProgress.Visible = true;
-
+            
             string tmpFile = tbFilename.Text + ".tmp";
 
             try
@@ -131,7 +115,6 @@ namespace WonderDog
                     catch { }
             }
 
-            pbProgress.Visible = false;
             UseWaitCursor = false;
             tlpMain.Enabled = true;
         }
@@ -152,6 +135,9 @@ namespace WonderDog
                 return false;
 
             if (string.IsNullOrWhiteSpace(tbPassword.Text))
+                return false;
+
+            if (tbPassword.Text != tbConfirm.Text)
                 return false;
 
             return true;
