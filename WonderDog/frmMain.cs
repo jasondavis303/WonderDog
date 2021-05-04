@@ -44,7 +44,7 @@ namespace WonderDog
             try
             {
                 using var mre = new ManualResetEvent(false);
-                var key = new Key(tbPassword.Text, new byte[8]);
+                var key = new Key(tbPassword.Text);
                 var alg = SymmetricFactory.CreateAES();
                 IProgress<KryptoProgress> prog = new Progress<KryptoProgress>(p =>
                 {
@@ -87,7 +87,7 @@ namespace WonderDog
             try
             {
                 using var mre = new ManualResetEvent(false);
-                var key = new Key(tbPassword.Text, new byte[8]);
+                var key = new Key(tbPassword.Text);
                 var alg = SymmetricFactory.CreateAES();
                 IProgress<KryptoProgress> prog = new Progress<KryptoProgress>(p =>
                 {
@@ -135,6 +135,9 @@ namespace WonderDog
                 return false;
 
             if (string.IsNullOrWhiteSpace(tbPassword.Text))
+                return false;
+
+            if (tbPassword.Text.Length < 8)
                 return false;
 
             if (tbPassword.Text != tbConfirm.Text)

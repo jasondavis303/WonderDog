@@ -29,6 +29,7 @@ namespace WonderDog
         /// </summary>
         private void InitializeComponent()
         {
+            this.components = new System.ComponentModel.Container();
             this.tlpMain = new System.Windows.Forms.TableLayoutPanel();
             this.lblFilename = new System.Windows.Forms.Label();
             this.tbFilename = new System.Windows.Forms.TextBox();
@@ -42,6 +43,7 @@ namespace WonderDog
             this.tbConfirm = new System.Windows.Forms.TextBox();
             this.pbProgress = new System.Windows.Forms.ProgressBar();
             this.ofdFilename = new System.Windows.Forms.OpenFileDialog();
+            this.toolTip1 = new System.Windows.Forms.ToolTip(this.components);
             this.tlpMain.SuspendLayout();
             this.tlpButtons.SuspendLayout();
             this.SuspendLayout();
@@ -133,6 +135,7 @@ namespace WonderDog
             this.tbPassword.Name = "tbPassword";
             this.tbPassword.Size = new System.Drawing.Size(372, 23);
             this.tbPassword.TabIndex = 5;
+            this.toolTip1.SetToolTip(this.tbPassword, "Password must be at least 8 characters long");
             this.tbPassword.UseSystemPasswordChar = true;
             this.tbPassword.TextChanged += new System.EventHandler(this.TextBox_TextChanged);
             // 
@@ -250,6 +253,7 @@ namespace WonderDog
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.TextBox tbConfirm;
         private System.Windows.Forms.ProgressBar pbProgress;
+        private System.Windows.Forms.ToolTip toolTip1;
     }
 }
 
